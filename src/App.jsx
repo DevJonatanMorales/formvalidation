@@ -1,50 +1,16 @@
 import { useState } from "react";
-import { ShowAlert } from "./functions";
+import { ShowAlert, Campos, ValidarCampo } from "./functions";
 import "./App.css";
 
-const ValNombre = (value) => {
-  let testNombre = /^[a-zA-ZÀ-ÿ]{3,15}$/;
-  let msj = "";
-  if (!testNombre.test(value)) {
-    msj = "Nombre incorrecto";
-  }
-
-  return msj;
-};
-
-const ValFecha = (value) => {
-  let fecha = /^\d{4}-\d{2}-\d{2}$/;
-  let msj = "";
-
-  if (!fecha.test(value)) {
-    msj = "Fecha incorrecta";
-  }
-
-  return msj;
-};
-
-const ValDirrecion = (value) => {
-  let msj = "";
-
-  if (value.length < 50) {
-    msj = "Por favos detalle mas la dirreccion";
-  }
-
-  return msj;
-};
-
 const App = () => {
-  const [PrimerNombre, setPrimerNombre] = useState("");
-  const [msjFrisNombre, setMsjFrisNombre] = useState("");
-
-  const [SegundoNombre, setSegundoNombre] = useState("");
-  const [msjSegundoNombre, setMsjSegundoNombre] = useState("");
-
-  const [Fecha, setFecha] = useState("");
-  const [msjFecha, setMsjFecha] = useState("");
-
-  const [Direccion, setDireccion] = useState("");
-  const [msjDirecion, setMsjDireccion] = useState("");
+  const DatosDefault = {
+    nombres: "",
+    apellidos: "",
+    fecha: "",
+    telefono: "",
+    correo: "",
+  };
+  const [Datos, setDatos] = useState(DatosDefault);
 
   return (
     <main className="text-white p-3">
@@ -54,19 +20,15 @@ const App = () => {
         autoComplete="off"
         onSubmit={(e) => {
           e.preventDefault();
-          let testNombre = /^[a-zA-ZÀ-ÿ]{3,15}$/;
-          let testFecha = /^\d{4}-\d{2}-\d{2}$/;
           if (
-            testNombre.test(PrimerNombre) &&
-            testNombre.test(SegundoNombre) &&
-            testFecha.test(Fecha) &&
-            Direccion.length > 49
+            Campos.nombres === true &&
+            Campos.apellidos === true &&
+            Campos.fecha === true &&
+            Campos.telefono === true &&
+            Campos.correo === true
           ) {
             ShowAlert("Cuenta creada con exito", "success");
-            setPrimerNombre("");
-            setSegundoNombre("");
-            setFecha("");
-            setDireccion("");
+            setDatos(DatosDefault);
           } else {
             ShowAlert(
               "Por favor ingrese los datos que se solicitan",
@@ -76,71 +38,117 @@ const App = () => {
         }}
       >
         <div className="mb-3">
-          <label htmlFor="txtPrimerNombre" className="form-label">
-            Primer Nombre
+          <label htmlFor="nombre" className="form-label">
+            Nombre:
           </label>
           <input
             type="text"
             className="form-control"
-            id="txtPrimerNombre"
-            value={PrimerNombre}
+            id="nombres"
+            name="nombres"
+            value={Datos.nombres}
             onChange={(e) => {
-              setPrimerNombre(e.target.value);
+              setDatos({ ...Datos, [e.target.name]: e.target.value });
             }}
-            onKeyUp={() => setMsjFrisNombre(ValNombre(PrimerNombre))}
-            placeholder="Por favor ingrese su primer nombre"
+            onKeyUp={(e) => {
+              ValidarCampo(e.target.value, e.target.name);
+            }}
+            placeholder="Por favor ingrese su nombre completo"
           />
-          <p className="text-warning "> {msjFrisNombre} </p>
+          <p id="msj__nombres" className="text-warning mt-1 error-activo">
+            El nombre invalido
+          </p>
         </div>
         <div className="mb-3">
-          <label htmlFor="txtSegundoNombre" className="form-label">
-            Segundo Nombre
+          <label htmlFor="apellidos" className="form-label">
+            Apellido:
           </label>
           <input
             type="text"
             className="form-control"
-            id="txtSegundoNombre"
-            value={SegundoNombre}
+            id="apellidos"
+            name="apellidos"
+            value={Datos.apellidos}
             onChange={(e) => {
-              setSegundoNombre(e.target.value);
+              setDatos({ ...Datos, [e.target.name]: e.target.value });
             }}
-            onKeyUp={() => setMsjSegundoNombre(ValNombre(SegundoNombre))}
-            placeholder="Por favor ingrese su segundo nombre"
+            onKeyUp={(e) => {
+              ValidarCampo(e.target.value, e.target.name);
+            }}
+            placeholder="Por favor ingrese su apellidos completo."
           />
-          <p className="text-warning "> {msjSegundoNombre} </p>
+          <p id="msj__apellidos" className="text-warning mt-1 error-activo">
+            El apellido es invalido{" "}
+          </p>
         </div>
         <div className="mb-3">
-          <label htmlFor="txtFecha" className="form-label">
-            Fecha de nacimiento
+          <label htmlFor="fecha" className="form-label">
+            Fecha de nacimiento:
           </label>
           <input
             type="date"
             className="form-control"
-            id="txtFecha"
-            value={Fecha}
+            id="fecha"
+            name="fecha"
+            value={Datos.fecha}
             onChange={(e) => {
-              setFecha(e.target.value);
+              setDatos({ ...Datos, [e.target.name]: e.target.value });
             }}
-            onKeyUp={() => setMsjFecha(ValFecha(Fecha))}
+            onKeyUp={(e) => {
+              ValidarCampo(e.target.value, e.target.name);
+            }}
             placeholder="Por favor ingrese su fecha de nacimiento"
           />
-          <p className="text-warning "> {msjFecha} </p>
+          <p id="msj__fecha" className="text-warning mt-1 error-activo">
+            La fecha es Invadida.
+          </p>
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleFormControlTextarea1" className="form-label">
-            Direccion
+          <label htmlFor="telefono" className="form-label">
+            Telefono:
           </label>
-          <textarea
+          <input
+            type="text"
             className="form-control"
-            id="exampleFormControlTextarea1"
+            id="telefono"
+            name="telefono"
+            value={Datos.telefono}
             onChange={(e) => {
-              setDireccion(e.target.value);
+              setDatos({ ...Datos, [e.target.name]: e.target.value });
             }}
-            onKeyUp={() => setMsjDireccion(ValDirrecion(Direccion))}
-            value={Direccion}
-          ></textarea>
-          <p className="text-warning "> {msjDirecion} </p>
+            onKeyUp={(e) => {
+              ValidarCampo(e.target.value, e.target.name);
+            }}
+            placeholder="Por favor ingrese su número de telefono."
+          />
+          <p id="msj__telefono" className="text-warning mt-1 error-activo">
+            El número de telefono es invalido.
+          </p>
         </div>
+
+        <div className="mb-3">
+          <label htmlFor="correo" className="form-label">
+            Correo:
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="correo"
+            name="correo"
+            value={Datos.correo}
+            onChange={(e) => {
+              setDatos({ ...Datos, [e.target.name]: e.target.value });
+            }}
+            onKeyUp={(e) => {
+              ValidarCampo(e.target.value, e.target.name);
+            }}
+            placeholder="Por favor ingrese su correo."
+          />
+          <p id="msj__correo" className="text-warning mt-1 error-activo">
+            El correo es invalido.
+          </p>
+        </div>
+
         <button className="text-white btn btn-dark m-auto" type="submit">
           Guardar
         </button>
