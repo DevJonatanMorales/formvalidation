@@ -1,21 +1,20 @@
 import React from 'react'
 
-export const FormGroup = ({ txtName, msjError, msjPlaceholder, setDatos, ValidarCampo, datos }) => {
+export const FormGroup = ({ lblName, txtName, inputTipo, msjError, msjPlaceholder, setDatos, ValidarCampo, datos }) => {
     return (
         <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">
-                {txtName}:
+            <label htmlFor={txtName} className="form-label">
+                {lblName}
             </label>
             <input
-                type="text"
+                type={inputTipo}
                 className="form-control"
                 id={txtName}
+                value={datos}
                 name={txtName}
                 placeholder={msjPlaceholder}
                 onChange={(e) => {
                     setDatos({ ...datos, [e.target.name]: e.target.value });
-                }}
-                onKeyUp={(e) => {
                     ValidarCampo(e.target.value, e.target.name);
                 }}
             />
@@ -25,3 +24,4 @@ export const FormGroup = ({ txtName, msjError, msjPlaceholder, setDatos, Validar
         </div>
     )
 }
+

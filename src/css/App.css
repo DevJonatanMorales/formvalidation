@@ -7,6 +7,10 @@
   align-items: center;
 }
 
+.error-activo {
+  display: none;
+}
+
 main {
   background-color: #4D4D4D;
   border-radius: 12px;
@@ -15,4 +19,4 @@ main {
 
 button {
   width: 100%;
- }
+}
